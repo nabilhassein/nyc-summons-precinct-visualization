@@ -27,7 +27,34 @@
   var slider = d3.select("body").append("slider");
 
   var numById = {};
-  var year = "CY2007";
+  var years = [
+    "CY2007",
+    "CY2008",
+    "CY2009",
+    "CY2010",
+    "CY2011",
+    "CY2012",
+    "CY2013",
+    "CY2014",
+    "2015 YTD 03/31"
+  ];
+  var yearMap = {
+    "2007": "CY2007",
+    "2008": "CY2008",
+    "2009": "CY2009",
+    "2010": "CY2010",
+    "2011": "CY2011",
+    "2012": "CY2012",
+    "2013": "CY2013",
+    "2014": "CY2014",
+    "2015": "2015 YTD 03/31"
+  }
+
+  for(var i = 0; i < years.length; i++) {
+    numById[years[i]] = {};
+  }
+  
+  var currentYear = years[0];
   var violation = "URINATING IN PUBLIC";
 
   var projection = d3.geo.mercator()
@@ -43,15 +70,15 @@
     .defer(d3.json, "data/police_precincts.geojson")
     .defer(d3.csv, "data/clean-summons-data.csv", function(row) {
       if (row.Violation === violation) {
-        numById[row.Precinct] = row[year];
+        for(var i = 0; i < years.length; i++) {
+          var year = years[i];
+          numById[year][row.Precinct] = row[year];
+         }
       }
     })
     .await(ready);
 
-  function ready(error, precinct) {
-    if (error) throw error;
-    console.log(numById);
-
+  function update(precinct) {
     svg.append("g")
       .attr("id", "precincts")
       .selectAll(".precinct")
@@ -59,7 +86,7 @@
       .enter().append("path")
       .attr("class", "precinct")
       .style("fill", function(d) {
-        var numViolations = numById[d.properties.Precinct];
+        var numViolations = numById[currentYear][d.properties.Precinct];
         if (numViolations < 10) {
           return "white";
         }
@@ -69,18 +96,32 @@
         return "red";
       })
       .attr("d", path);
-    };
+  }
+
+  function ready(error, precinct) {
+    if (error) throw error;
+
+    update(precinct);
 
     slider.append("foo")
       .call(
         chroniton()
           .domain([new Date(2007, 1, 1), new Date(2015, 1, 1)])
           .labelFormat(function(date) {
-            return date.getFullYear();
+            return yearMap[date.getFullYear()];
           })
           .width(width / 2)
+          .on("change", function(date) {
+            newYear = yearMap[date.getFullYear()];
+            if (newYear != currentYear) {
+              currentYear = newYear;
+              svg.selectAll("path").remove();
+              update(precinct);
+            }
+          })
+          .loop(true)
       );
-
+  }
 </script>
 </body>
 </html>
