@@ -5,42 +5,69 @@
 #precincts {
   stroke: grey;
   stroke-width: 2px;
-  fill: red;
+  fill: white;
 }
 </style>
 
 <script src="static/d3.v3.min.js" charset="utf-8"></script>
+<script src="static/queue.v1.min.js" charset="utf-8"></script>
 
 <body>
 
 <script>
-var width = 960,
-    height = 500;
+  var width = window.innerWidth,
+      height = window.innerHeight;
 
-var svg = d3.select("body").append("svg")
+  var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
 
-  d3.json("data/police_precincts.geojson", function(error, precinct) {
-    var projection = d3.geo.mercator()
-     .center([-73.94, 40.70])
-     .scale(50000)
-     .translate([(width) / 2, (height)/2]);
+  var numById = {};
+  var year = "CY2007";
+  var violation = "URINATING IN PUBLIC";
+
+  var projection = d3.geo.mercator()
+    .center([-73.94, 40.70])
+    .scale(50000)
+    .translate([(width) / 2, (height)/2]);
 
   var path = d3.geo.path()
     .projection(projection);
 
-  var g = svg.append("g");
 
-	g.append("g")
-    .attr("id", "precincts")
-    .selectAll(".state")
-    .data(precinct.features)
-    .enter().append("path")
-    .attr("class", function(d){ return d.properties.name; })
-    .attr("d", path);
-  });
+  queue()
+    .defer(d3.json, "data/police_precincts.geojson")
+    .defer(d3.csv, "data/clean-summons-data.csv", function(row) {
+      if (row.Violation === violation) {
+        numById[row.Precinct] = row[year];
+      }
+    })
+    .await(ready);
 
+  function ready(error, precinct) {
+    if (error) throw error;
+    console.log(numById);
+
+    var g = svg.append("g");
+
+    g.append("g")
+      .attr("id", "precincts")
+      .selectAll(".precinct")
+      .data(precinct.features)
+      .enter().append("path")
+      .attr("class", "precinct")
+      .style("fill", function(d) {
+        var numViolations = numById[d.properties.Precinct];
+        if (numViolations < 10) {
+          return "white";
+        }
+        if (numViolations < 100) {
+          return "blue";
+        }
+        return "red";
+      })
+      .attr("d", path);
+  };
 </script>
 </body>
 </html>
