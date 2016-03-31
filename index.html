@@ -11,6 +11,8 @@
 
 <script src="static/d3.v3.min.js" charset="utf-8"></script>
 <script src="static/queue.v1.min.js" charset="utf-8"></script>
+<script src="static/chroniton.js"></script>
+<link href="static/chroniton.css" rel="stylesheet">
 
 <body>
 
@@ -21,6 +23,8 @@
   var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
+
+  var slider = d3.select("body").append("slider");
 
   var numById = {};
   var year = "CY2007";
@@ -48,9 +52,7 @@
     if (error) throw error;
     console.log(numById);
 
-    var g = svg.append("g");
-
-    g.append("g")
+    svg.append("g")
       .attr("id", "precincts")
       .selectAll(".precinct")
       .data(precinct.features)
@@ -67,7 +69,18 @@
         return "red";
       })
       .attr("d", path);
-  };
+    };
+
+    slider.append("foo")
+      .call(
+        chroniton()
+          .domain([new Date(2007, 1, 1), new Date(2015, 1, 1)])
+          .labelFormat(function(date) {
+            return date.getFullYear();
+          })
+          .width(width / 2)
+      );
+
 </script>
 </body>
 </html>
