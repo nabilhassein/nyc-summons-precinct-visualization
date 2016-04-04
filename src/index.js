@@ -1,3 +1,5 @@
+'use strict';
+
 import d3 from 'd3';
 import d3_queue from 'd3-queue';
 import chroniton from 'chroniton';
@@ -35,8 +37,8 @@ var yearMap = {
     "2015": "2015 YTD 03/31"
 }
 
-for(var i = 0; i < years.length; i++) {
-    numById[years[i]] = {};
+for(var year of years) {
+    numById[year] = {};
 }
 
 var currentYear = years[0];
@@ -51,12 +53,11 @@ var path = d3.geo.path()
     .projection(projection);
 
 
-var q = d3_queue.queue();
-q.defer(d3.json, "data/police_precincts.geojson")
-    .defer(d3.csv, "data/clean-summons-data.csv", function(row) {
+d3_queue.queue()
+    .defer(d3.json, "data/police_precincts.geojson")
+    .defer(d3.csv, "data/clean-summons-data.csv", row => {
         if (row.Violation === violation) {
-            for(var i = 0; i < years.length; i++) {
-                var year = years[i];
+            for(var year of years) {
                 numById[year][row.Precinct] = row[year];
             }
         }
@@ -70,7 +71,7 @@ function update(precinct) {
         .data(precinct.features)
         .enter().append("path")
         .attr("class", "precinct")
-        .style("fill", function(d) {
+        .style("fill", d => {
             var numViolations = numById[currentYear][d.properties.Precinct];
             if (numViolations < 10) {
                 return "white";
@@ -92,11 +93,9 @@ function ready(error, precinct) {
         .call(
             chroniton()
                 .domain([new Date(2007, 1, 1), new Date(2015, 1, 1)])
-                .labelFormat(function(date) {
-                    return yearMap[date.getFullYear()];
-                })
+                .labelFormat(date => { yearMap[date.getFullYear()] })
                 .width(width / 2)
-                .on("change", function(date) {
+                .on("change", date => {
                     var newYear = yearMap[date.getFullYear()];
                     if (newYear != currentYear) {
                         currentYear = newYear;
