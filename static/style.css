@@ -1,3 +1,9 @@
+#precincts {
+  stroke: grey;
+  stroke-width: 2px;
+  fill: white;
+}
+
 .chroniton {
   font: 10px sans-serif;
   outline:none;
