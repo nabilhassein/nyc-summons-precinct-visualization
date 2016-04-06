@@ -6,7 +6,7 @@ module.exports = {
         path: './dist/',
     },
     devServer: {
-        contentBase: 'public',
+        contentBase: 'static',
     },
     module: {
         loaders: [
