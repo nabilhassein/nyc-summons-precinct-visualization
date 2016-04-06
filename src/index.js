@@ -75,9 +75,7 @@ function update(precincts) {
         .attr("class", d => {
             var numViolations = numById[currentYear + parseInt(d.properties.Precinct) + currentViolation];
             var quantize = quantizeMax(maxByViolation[currentViolation]);
-            var foo = quantize(numViolations);
-            console.log(foo);
-            return foo;
+            return quantize(numViolations);
         })
         .attr("d", path);
 }
