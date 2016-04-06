@@ -8,8 +8,8 @@ var width = window.innerWidth,
     height = window.innerHeight;
 
 var svg = d3.select("body").append("svg")
-    .attr("width", width)
-    .attr("height", height);
+    .attr("width", width * .7)
+    .attr("height", height * .7);
 
 var slider = d3.select("body").append("slider");
 
@@ -26,15 +26,15 @@ var years = [
     "2015 YTD 03/31"
 ];
 var yearMap = {
-    "2007": "CY2007",
-    "2008": "CY2008",
-    "2009": "CY2009",
-    "2010": "CY2010",
-    "2011": "CY2011",
-    "2012": "CY2012",
-    "2013": "CY2013",
-    "2014": "CY2014",
-    "2015": "2015 YTD 03/31"
+    "2007": years[0],
+    "2008": years[1],
+    "2009": years[2],
+    "2010": years[3],
+    "2011": years[4],
+    "2012": years[5],
+    "2013": years[6],
+    "2014": years[7],
+    "2015": years[8]
 }
 
 var currentYear = years[0];
