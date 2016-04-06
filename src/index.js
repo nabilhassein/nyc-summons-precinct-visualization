@@ -37,12 +37,8 @@ var yearMap = {
     "2015": "2015 YTD 03/31"
 }
 
-for(var year of years) {
-    numById[year] = {};
-}
-
 var currentYear = years[0];
-var violation = "URINATING IN PUBLIC";
+var currentViolation = "URINATING IN PUBLIC";
 
 var projection = d3.geo.mercator()
     .center([-73.94, 40.70])
@@ -52,42 +48,44 @@ var projection = d3.geo.mercator()
 var path = d3.geo.path()
     .projection(projection);
 
-
+var maxByViolation = {};
 d3_queue.queue()
     .defer(d3.json, "data/police_precincts.geojson")
     .defer(d3.csv, "data/clean-summons-data.csv", row => {
-        if (row.Violation === violation) {
-            for(var year of years) {
-                numById[year][row.Precinct] = row[year];
-            }
+        for(var year of years) {
+            numById[year + parseInt(row.Precinct) + row.Violation] = row[year];
+            maxByViolation[row.Violation] = row.Max;
         }
     })
     .await(ready);
 
-function update(precinct) {
+function quantizeMax(max) {
+    return d3.scale.quantize()
+        .domain([0, max])
+        .range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
+}
+
+function update(precincts) {
     svg.append("g")
         .attr("id", "precincts")
         .selectAll(".precinct")
-        .data(precinct.features)
+        .data(precincts.features)
         .enter().append("path")
         .attr("class", "precinct")
-        .style("fill", d => {
-            var numViolations = numById[currentYear][d.properties.Precinct];
-            if (numViolations < 10) {
-                return "white";
-            }
-            if (numViolations < 100) {
-                return "blue";
-            }
-            return "red";
+        .attr("class", d => {
+            var numViolations = numById[currentYear + parseInt(d.properties.Precinct) + currentViolation];
+            var quantize = quantizeMax(maxByViolation[currentViolation]);
+            var foo = quantize(numViolations);
+            console.log(foo);
+            return foo;
         })
         .attr("d", path);
 }
 
-function ready(error, precinct) {
+function ready(error, precincts) {
     if (error) throw error;
 
-    update(precinct);
+    update(precincts);
 
     slider.append("foo")
         .call(
@@ -100,7 +98,7 @@ function ready(error, precinct) {
                     if (newYear != currentYear) {
                         currentYear = newYear;
                         svg.selectAll("path").remove();
-                        update(precinct);
+                        update(precincts);
                     }
                 })
                 .loop(true)
