@@ -11,9 +11,24 @@ export default class PrecinctMap extends React.Component {
         return <div id={this.id} />;
     }
 
+    componentWillReceiveProps(newProps) {
+        this.svg
+            .selectAll(".precinct")
+            .attr("class", d => {
+                const numViolations = newProps.violationData[d.properties.Precinct.toString()],
+                      quantize = d3.scale.quantize()
+                        .domain([0, newProps.violationMax])
+                        .range(d3.range(9).map(i => "q" + i + "-9"));
+
+                return quantize(numViolations) + " precinct";
+            });
+
+        // instead of attr and class, use style and fill with rbg directly
+    }
+
     componentDidMount() {
         const width = window.innerWidth,
-              height = window.innerHeight;
+              height = window.innerHeight * .9;
 
         const id = this.id;
 
@@ -45,8 +60,7 @@ export default class PrecinctMap extends React.Component {
                         .domain([0, violationMax])
                         .range(d3.range(9).map(i => "q" + i + "-9"));
 
-                return quantize(numViolations); // + " .precinct"
+                return quantize(numViolations) + " precinct"; // learn to use d3 classed instead of this
             });
-
     }
 }

@@ -1,18 +1,18 @@
 import React from 'react';
-import _ from 'underscore';
+import { connect } from 'react-redux'
 import PrecinctMap from './PrecinctMap.js';
+import Slider from './Slider.js'
 
-export default class UI extends React.Component {
-    componentWillMount() {
-        const currentViolation = "DISORDERLY CONDUCT",
-              currentYear = "CY2007";
+const mapStateToProps = state => {
+    return {
+        currentYear: state.currentYear
+    }
+}
 
-        const violationsSubset = this.getViolationData(currentViolation, currentYear);
-
-        this.setState({
-            violationSubset: violationsSubset.violationsByPrecinct,
-            violationMax: violationsSubset.max,
-        });
+class UI extends React.Component {
+    constructor(props) {
+        super(props);
+        this.id = "UI";
     }
 
     getViolationData(currentViolation, currentYear) {
@@ -33,8 +33,17 @@ export default class UI extends React.Component {
     }
 
     render() {
-        return (<div>
-                <PrecinctMap violationData={this.state.violationSubset} violationMax={this.state.violationMax} precinctJson={this.props.precinctJson} />
-               </div>);
+        const [violationSubset, violationMax] =
+            this.getViolationData(this.props.currentViolation, this.props.currentYear);
+        return (<div id={this.id}>
+                <PrecinctMap violationData={violationSubset} violationMax={violationMax} precinctJson={this.props.precinctJson} />
+                <Slider currentYear={this.props.currentYear} />
+                </div>);
     }
 };
+
+const VisibleUI = connect(
+    mapStateToProps
+)(UI);
+
+export default VisibleUI;
