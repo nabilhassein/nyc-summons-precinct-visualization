@@ -16,28 +16,20 @@ export default class UI extends React.Component {
     }
 
     getViolationData(currentViolation, currentYear) {
-        var max = 0;
+        return this.props.violationData.reduce(
+            ([precinctObj, currentMax], row) => {
+                if (row.Violation === currentViolation) {
+                    const precinct = parseInt(row.Precinct).toString(), // remove double-parse by cleaning data
+                          numViolations = row[currentYear],
+                          newMax = Math.max(currentMax, numViolations);
 
-        const violationsByPrecinct = _.reduce(
-            this.props.violationData,
-            (acc, row) => {
-                if (row.Violation == currentViolation) {
-                    const numViolations = row[currentYear],
-                          precinct = parseInt(row.Precinct).toString();
-
-                    max = Math.max(max, numViolations);
-                    _.extend(acc, { [precinct] : numViolations });
+                    return [{...precinctObj, [precinct] : numViolations}, newMax];
                 }
 
-                return acc;
+                return [precinctObj, currentMax];
             },
-            {}
+            [{}, 0]
         );
-
-        return {
-            violationsByPrecinct: violationsByPrecinct,
-            max: max,
-        };
     }
 
     render() {
