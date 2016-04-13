@@ -1,5 +1,5 @@
 const defaultState = {
-    "currentYear": "CY2007",
+    "currentYear": "2007",
     "currentViolation": "DISORDERLY CONDUCT",
 }
 

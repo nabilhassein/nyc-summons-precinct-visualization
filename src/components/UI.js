@@ -17,16 +17,15 @@ class UI extends React.Component {
 
     getViolationData(currentViolation, currentYear) {
         return this.props.violationData.reduce(
-            ([precinctObj, currentMax], row) => {
+            ([precinctObj, oldMax], row) => {
                 if (row.Violation === currentViolation) {
-                    const precinct = parseInt(row.Precinct).toString(), // remove double-parse by cleaning data
-                          numViolations = row[currentYear],
-                          newMax = Math.max(currentMax, numViolations);
+                    const numViolations = row[currentYear],
+                          newMax = Math.max(numViolations, oldMax);
 
-                    return [{...precinctObj, [precinct]: numViolations}, newMax];
+                    return [{...precinctObj, [row.Precinct]: numViolations}, newMax];
                 }
 
-                return [precinctObj, currentMax];
+                return [precinctObj, oldMax];
             },
             [{}, 0]
         );

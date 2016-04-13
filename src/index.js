@@ -14,7 +14,7 @@ d3_queue.queue()
     .defer(d3.csv, "data/clean-summons-data.csv")
     .await( (error, precinctJson, violationData) => {
         const store = createStore(reducer);
-        const defaultYear = "CY2007";
+        const defaultYear = "2007";
         const defaultViolation = "DISORDERLY CONDUCT";
         ReactDOM.render(
             <Provider store={store}>
