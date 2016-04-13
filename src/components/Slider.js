@@ -3,12 +3,6 @@ import { connect } from 'react-redux'
 import d3 from 'd3'
 import chroniton from 'chroniton'
 
-const mapStateToProps = state => {
-    return {
-        currentYear: state.currentYear
-    }
-}
-
 const mapDispatchToProps = dispatch => {
     return {
         onSlide: newYear => {
@@ -58,9 +52,4 @@ class Slider extends React.Component {
     }
 };
 
-const VisibleSlider = connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Slider);
-
-export default VisibleSlider;
+export default connect(undefined, mapDispatchToProps)(Slider);

@@ -1,6 +1,6 @@
-import React from 'react';
+import React from 'react'
 import { connect } from 'react-redux'
-import PrecinctMap from './PrecinctMap.js';
+import PrecinctMap from './PrecinctMap.js'
 import Slider from './Slider.js'
 
 const mapStateToProps = state => {
@@ -23,7 +23,7 @@ class UI extends React.Component {
                           numViolations = row[currentYear],
                           newMax = Math.max(currentMax, numViolations);
 
-                    return [{...precinctObj, [precinct] : numViolations}, newMax];
+                    return [{...precinctObj, [precinct]: numViolations}, newMax];
                 }
 
                 return [precinctObj, currentMax];
@@ -35,6 +35,7 @@ class UI extends React.Component {
     render() {
         const [violationSubset, violationMax] =
             this.getViolationData(this.props.currentViolation, this.props.currentYear);
+
         return (<div id={this.id}>
                 <PrecinctMap violationData={violationSubset} violationMax={violationMax} precinctJson={this.props.precinctJson} />
                 <Slider currentYear={this.props.currentYear} />
@@ -42,8 +43,4 @@ class UI extends React.Component {
     }
 };
 
-const VisibleUI = connect(
-    mapStateToProps
-)(UI);
-
-export default VisibleUI;
+export default connect(mapStateToProps)(UI);
