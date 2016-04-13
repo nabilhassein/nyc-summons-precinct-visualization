@@ -8,14 +8,8 @@ df = df[~df.Precinct.str.contains('CITYWIDE')]
 df = df[~df.Precinct.str.contains('Total')]
 df = df[~df.Violation.str.contains('Total')]
 
-violations = pd.Series.unique(df.Violation)
-violationMax = {}
-
-for violation in violations:
-    subset = df[df.Violation == violation]
-    subset = subset.drop(subset.columns[[0, 1, 2]], axis = 1)
-    violationMax[violation] = max(subset.max(numericOnly = True))
-
-df['Max'] = df.apply(lambda row: violationMax[row.Violation], axis = 1)
+df.Precinct = df.Precinct.map(lambda precinct: precinct.lstrip('0'))
+df.columns = df.columns.str.replace('CY', '')
+df.columns = df.columns.str.replace(' YTD 03/31', '')
 
 df.to_csv('data/clean-summons-data.csv', index_label="Id")
