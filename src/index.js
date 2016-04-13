@@ -14,11 +14,16 @@ d3_queue.queue()
     .defer(d3.csv, "data/clean-summons-data.csv")
     .await( (error, precinctJson, violationData) => {
         const store = createStore(reducer);
-        const defaultYear = "2007";
+
+        const years = d3.keys(violationData[0]).filter(col => +col == col).sort(),
+              firstYear = years[0],
+              lastYear = years[years.length - 1];
+
         const defaultViolation = "DISORDERLY CONDUCT";
+
         ReactDOM.render(
             <Provider store={store}>
-                <UI precinctJson={precinctJson} violationData={violationData} currentYear={defaultYear} currentViolation={defaultViolation} />
+                <UI precinctJson={precinctJson} violationData={violationData} firstYear={firstYear} lastYear={lastYear} currentYear={firstYear} currentViolation={defaultViolation} />
             </Provider>,
             document.getElementById("root")
         );

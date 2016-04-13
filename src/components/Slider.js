@@ -26,11 +26,13 @@ class Slider extends React.Component {
 
     componentDidMount() {
         const id = this.id,
-              onSlide = this.props.onSlide;
+              onSlide = this.props.onSlide,
+              firstYear = this.props.firstYear,
+              lastYear = this.props.lastYear;
 
         this.slider = d3.select("#" + id).call(
             chroniton()
-                .domain([new Date(2007, 1, 1), new Date(2015, 1, 1)])
+                .domain([new Date(firstYear, 1, 1), new Date(lastYear, 1, 1)])
                 .labelFormat(date => date.getFullYear())
                 .width(window.innerWidth / 2)
                 .on("change", date => onSlide(date.getFullYear().toString()))

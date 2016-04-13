@@ -37,7 +37,7 @@ class UI extends React.Component {
 
         return (<div id={this.id}>
                 <PrecinctMap violationData={violationSubset} violationMax={violationMax} precinctJson={this.props.precinctJson} />
-                <Slider currentYear={this.props.currentYear} />
+                <Slider firstYear={this.props.firstYear} lastYear={this.props.lastYear} currentYear={this.props.currentYear} />
                 </div>);
     }
 };
