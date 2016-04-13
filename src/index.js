@@ -21,9 +21,11 @@ d3_queue.queue()
 
         const defaultViolation = "DISORDERLY CONDUCT";
 
+        const allViolations = [...new Set(violationData.map(d => d.Violation))].sort();
+
         ReactDOM.render(
             <Provider store={store}>
-                <UI precinctJson={precinctJson} violationData={violationData} firstYear={firstYear} lastYear={lastYear} currentYear={firstYear} currentViolation={defaultViolation} />
+                <UI precinctJson={precinctJson} violationData={violationData} firstYear={firstYear} lastYear={lastYear} currentYear={firstYear} currentViolation={defaultViolation} allViolations={allViolations} />
             </Provider>,
             document.getElementById("root")
         );

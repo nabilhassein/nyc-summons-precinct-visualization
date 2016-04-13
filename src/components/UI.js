@@ -2,10 +2,12 @@ import React from 'react'
 import { connect } from 'react-redux'
 import PrecinctMap from './PrecinctMap.js'
 import Slider from './Slider.js'
+import ViolationInput from './ViolationInput.js'
 
 const mapStateToProps = state => {
     return {
-        currentYear: state.currentYear
+        currentYear: state.currentYear,
+        currentViolation: state.currentViolation,
     }
 }
 
@@ -38,6 +40,7 @@ class UI extends React.Component {
         return (<div id={this.id}>
                 <PrecinctMap violationData={violationSubset} violationMax={violationMax} precinctJson={this.props.precinctJson} />
                 <Slider firstYear={this.props.firstYear} lastYear={this.props.lastYear} currentYear={this.props.currentYear} />
+                <ViolationInput violations={this.props.allViolations} />
                 </div>);
     }
 };

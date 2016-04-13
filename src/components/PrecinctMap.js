@@ -25,7 +25,7 @@ export default class PrecinctMap extends React.Component {
 
     componentDidMount() {
         const width = window.innerWidth,
-              height = window.innerHeight * .9,
+              height = window.innerHeight * .8,
               id = this.id,
               precinctClass = this.precinctClass,
               features = this.props.precinctJson.features;
