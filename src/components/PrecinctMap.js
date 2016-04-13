@@ -5,6 +5,17 @@ export default class PrecinctMap extends React.Component {
     constructor() {
         super();
         this.id = "PrecinctMap";
+        this.bucketToColor = {
+            q0: "rgb(247,251,255)",
+            q1: "rgb(222,235,247)",
+            q2: "rgb(198,219,239)",
+            q3: "rgb(158,202,225)",
+            q4: "rgb(107,174,214)",
+            q5: "rgb(66,146,198)",
+            q6: "rgb(33,113,181)",
+            q7: "rgb(8,81,156)",
+            q8: "rgb(8,48,107)",
+        }
     }
 
     render() {
@@ -12,18 +23,18 @@ export default class PrecinctMap extends React.Component {
     }
 
     componentWillReceiveProps(newProps) {
+        const bucketToColor = this.bucketToColor;
         this.svg
             .selectAll(".precinct")
-            .attr("class", d => {
+            .style("fill", d => {
                 const numViolations = newProps.violationData[d.properties.Precinct.toString()],
                       quantize = d3.scale.quantize()
                         .domain([0, newProps.violationMax])
-                        .range(d3.range(9).map(i => "q" + i + "-9"));
+                        .range(d3.range(9).map(i => "q" + i)),
+                      bucket = quantize(numViolations);
 
-                return quantize(numViolations) + " precinct";
+                return bucketToColor[bucket];
             });
-
-        // instead of attr and class, use style and fill with rbg directly
     }
 
     componentDidMount() {
@@ -52,7 +63,6 @@ export default class PrecinctMap extends React.Component {
             .selectAll(".precinct")
             .data(features)
             .enter().append("path")
-            .attr("class", "precinct")
             .attr("d", path)
             .attr("class", d => {
                 const numViolations = violationData[d.properties.Precinct.toString()],
@@ -62,5 +72,7 @@ export default class PrecinctMap extends React.Component {
 
                 return quantize(numViolations) + " precinct"; // learn to use d3 classed instead of this
             });
+
+        this.componentWillReceiveProps(this.props);
     }
 }
