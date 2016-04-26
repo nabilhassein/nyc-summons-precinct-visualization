@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import d3 from 'd3'
+import d3_legend from 'd3-svg-legend'
 
 const mapStateToProps = state => {
     return {
@@ -36,17 +37,8 @@ class PrecinctMap extends React.Component {
         this.precinctClass = "precinct";
         this.tooltipRectClass = "d3-tooltip-rect";
         this.tooltipTextClass = "d3-tooltip-text";
-        this.bucketToColor = {
-            q0: "rgb(247,251,255)",
-            q1: "rgb(222,235,247)",
-            q2: "rgb(198,219,239)",
-            q3: "rgb(158,202,225)",
-            q4: "rgb(107,174,214)",
-            q5: "rgb(66,146,198)",
-            q6: "rgb(33,113,181)",
-            q7: "rgb(8,81,156)",
-            q8: "rgb(8,48,107)",
-        };
+        this.legendClass = "legendQuant";
+        this.removableClass = "removable";
     }
 
     render() {
@@ -88,19 +80,31 @@ class PrecinctMap extends React.Component {
 
     componentWillReceiveProps(newProps) {
         const bucketToColor = this.bucketToColor,
-              precinctClass = this.precinctClass;
+              precinctClass = this.precinctClass,
+              legendClass = this.legendClass;
+
+        const quantize = d3.scale.quantize()
+              .domain([0, newProps.violationMax])
+              .range(d3.range(9).map(i => "q" + i));
 
         this.svg
             .selectAll("." + precinctClass)
-            .style("fill", d => {
-                const numViolations = newProps.violationData[d.properties.Precinct.toString()],
-                      quantize = d3.scale.quantize()
-                        .domain([0, newProps.violationMax])
-                        .range(d3.range(9).map(i => "q" + i)),
-                      bucket = quantize(numViolations);
-
-                return bucketToColor[bucket];
+            .attr("class", d => {
+                const numViolations = newProps.violationData[d.properties.Precinct.toString()];
+                return quantize(numViolations) + " " + precinctClass;
             });
+
+        this.svg.append("g")
+            .attr("class", legendClass)
+            .attr("transform", "translate(20,20)");
+
+        const colorLegend = d3_legend.legend.color()
+              .labelFormat(d3.format("f"))
+              .useClass(true)
+              .scale(quantize);
+
+        this.svg.select("." + legendClass)
+            .call(colorLegend);
 
         this.drawTooltip(newProps.currentPrecinct, newProps.violationData, newProps.mouseX, newProps.mouseY);
     }
@@ -109,10 +113,14 @@ class PrecinctMap extends React.Component {
         if (selectedPrecinct) {
             const tooltipRectClass = this.tooltipRectClass,
                   tooltipTextClass = this.tooltipTextClass,
+                  removableClass = this.removableClass,
                   xOffset = 42,
                   yOffset = 25;
 
-            const g = this.svg.append("g").attr('x', mouseX).attr('y', mouseY);
+            const g = this.svg.append("g")
+                  .attr('x', mouseX)
+                  .attr('y', mouseY)
+                  .classed(removableClass, true);
 
             const tooltipText = g.selectAll("." + tooltipTextClass)
                   .data([selectedPrecinct]);
@@ -152,7 +160,7 @@ class PrecinctMap extends React.Component {
 
             tooltipRect.exit().remove();
         } else {
-            d3.select("#" + this.id).select("svg").selectAll("g").remove();
+            d3.select("#" + this.id).select("svg").selectAll("g." + this.removableClass).remove();
         }
     }
 }
