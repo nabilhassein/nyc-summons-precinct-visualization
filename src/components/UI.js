@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import Legend from './Legend.js'
 import PrecinctMap from './PrecinctMap.js'
 import Slider from './Slider.js'
 import ViolationInput from './ViolationInput.js'
@@ -38,6 +39,7 @@ class UI extends React.Component {
             this.getViolationData(this.props.currentViolation, this.props.currentYear);
 
         return (<div id={this.id}>
+                <Legend violationMax={violationMax} />
                 <PrecinctMap violationData={violationSubset} violationMax={violationMax} precinctJson={this.props.precinctJson} />
                 <Slider firstYear={this.props.firstYear} lastYear={this.props.lastYear} currentYear={this.props.currentYear} />
                 <ViolationInput violations={this.props.allViolations} />

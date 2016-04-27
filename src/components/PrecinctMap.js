@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import d3 from 'd3'
-import d3_legend from 'd3-svg-legend'
 
 const mapStateToProps = state => {
     return {
@@ -13,12 +12,12 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        mouseover: precinct => {
+        mouseover: (precinct, mouseX, mouseY) => {
             dispatch({
                 type: "PRECINCT_HOVER",
                 currentPrecinct: precinct,
-                mouseX: d3.event.clientX,
-                mouseY: d3.event.clientY,
+                mouseX: mouseX,
+                mouseY: mouseY,
             })
         },
         mouseout: () => {
@@ -37,8 +36,6 @@ class PrecinctMap extends React.Component {
         this.precinctClass = "precinct";
         this.tooltipRectClass = "d3-tooltip-rect";
         this.tooltipTextClass = "d3-tooltip-text";
-        this.legendClass = "legendQuant";
-        this.removableClass = "removable";
     }
 
     render() {
@@ -46,8 +43,8 @@ class PrecinctMap extends React.Component {
     }
 
     componentDidMount() {
-        const width = window.innerWidth,
-              height = window.innerHeight * .8,
+        const width = window.innerWidth * .8,
+              height = window.innerHeight * .65,
               id = this.id,
               precinctClass = this.precinctClass,
               features = this.props.precinctJson.features,
@@ -71,7 +68,10 @@ class PrecinctMap extends React.Component {
             .data(features)
             .enter().append("path")
             .attr("d", path)
-            .on("mouseover", e => mouseover(e.properties.Precinct))
+            .on("mouseover", e => {
+                const [x, y] = d3.mouse(this.svg[0][0]);
+                mouseover(e.properties.Precinct, x, y);
+            })
             .on("mouseout", e => mouseout())
             .classed(precinctClass, true);
 
@@ -79,9 +79,7 @@ class PrecinctMap extends React.Component {
     }
 
     componentWillReceiveProps(newProps) {
-        const bucketToColor = this.bucketToColor,
-              precinctClass = this.precinctClass,
-              legendClass = this.legendClass;
+        const precinctClass = this.precinctClass;
 
         const quantize = d3.scale.quantize()
               .domain([0, newProps.violationMax])
@@ -94,18 +92,6 @@ class PrecinctMap extends React.Component {
                 return quantize(numViolations) + " " + precinctClass;
             });
 
-        this.svg.append("g")
-            .attr("class", legendClass)
-            .attr("transform", "translate(20,20)");
-
-        const colorLegend = d3_legend.legend.color()
-              .labelFormat(d3.format("f"))
-              .useClass(true)
-              .scale(quantize);
-
-        this.svg.select("." + legendClass)
-            .call(colorLegend);
-
         this.drawTooltip(newProps.currentPrecinct, newProps.violationData, newProps.mouseX, newProps.mouseY);
     }
 
@@ -113,14 +99,12 @@ class PrecinctMap extends React.Component {
         if (selectedPrecinct) {
             const tooltipRectClass = this.tooltipRectClass,
                   tooltipTextClass = this.tooltipTextClass,
-                  removableClass = this.removableClass,
                   xOffset = 42,
                   yOffset = 25;
 
             const g = this.svg.append("g")
                   .attr('x', mouseX)
-                  .attr('y', mouseY)
-                  .classed(removableClass, true);
+                  .attr('y', mouseY);
 
             const tooltipText = g.selectAll("." + tooltipTextClass)
                   .data([selectedPrecinct]);
@@ -160,7 +144,7 @@ class PrecinctMap extends React.Component {
 
             tooltipRect.exit().remove();
         } else {
-            d3.select("#" + this.id).select("svg").selectAll("g." + this.removableClass).remove();
+            d3.select("#" + this.id).select("svg").selectAll("g").remove();
         }
     }
 }
