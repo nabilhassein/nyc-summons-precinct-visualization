@@ -39,10 +39,10 @@ class UI extends React.Component {
             this.getViolationData(this.props.currentViolation, this.props.currentYear);
 
         return (<div id={this.id}>
+                <ViolationInput violations={this.props.allViolations} />
                 <Legend violationMax={violationMax} />
                 <PrecinctMap violationData={violationSubset} violationMax={violationMax} precinctJson={this.props.precinctJson} />
                 <Slider firstYear={this.props.firstYear} lastYear={this.props.lastYear} currentYear={this.props.currentYear} />
-                <ViolationInput violations={this.props.allViolations} />
                 </div>);
     }
 };
