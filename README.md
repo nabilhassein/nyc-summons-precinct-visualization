@@ -5,6 +5,9 @@ I chose this as a simple project for me to learn some data visualization using D
 modern front-end tools and techniques like React, Redux, webpack, Babel, npm,  
 and related topics such as data cleaning and exploratory analysis with Python/pandas.
 
+# See it live
+https://nabilhassein.github.io/nyc-summons-precinct-visualization/
+
 # Running locally
 After `git clone`-ing this repo, from within the directory:  
 ```
@@ -18,13 +21,13 @@ Also let me know of any suggestions you have to improve the code. I'm new at thi
 Tips about styling, whether inline React or CSS, would be especially appreciated!  
 
 # Data sources
-- [https://data.cityofnewyork.us/Public-Safety/Criminal-Court-Summonses/j8nm-zs7q]()
-- [https://raw.githubusercontent.com/dwillis/nyc-maps/master/police_precincts.geojson]()
+- https://data.cityofnewyork.us/Public-Safety/Criminal-Court-Summonses/j8nm-zs7q
+- https://raw.githubusercontent.com/dwillis/nyc-maps/master/police_precincts.geojson
 
 # A few useful examples
-- [https://bl.ocks.org/mbostock/4060606]()
-- [https://github.com/maptime-ams/animated-borders-d3js]()
-- [https://nicolashery.com/integrating-d3js-visualizations-in-a-react-app/]()
+- https://bl.ocks.org/mbostock/4060606
+- https://github.com/maptime-ams/animated-borders-d3js
+- https://nicolashery.com/integrating-d3js-visualizations-in-a-react-app/
 
 # Possible future work
 - wire defaults from reducer into index, or vice-versa -- remove repetition
