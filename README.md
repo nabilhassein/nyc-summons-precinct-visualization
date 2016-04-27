@@ -35,6 +35,5 @@ Tips about styling, whether inline React or CSS, would be especially appreciated
 - remove hardcoding in tooltip text placement
 - more generally, improve styling & layout -- css modules, inline styles?
 - find and use a react slider component similar to autocomplete in place of chroniton
-- use common max for given violation across all years (would need to remove incomplete 2015 data)
 - mobile equivalent of onhover -- ontap?
 - add more precinct-based datasets!
