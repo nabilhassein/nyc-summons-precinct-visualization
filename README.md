@@ -25,3 +25,13 @@ Tips about styling, whether inline React or CSS, would be especially appreciated
 - [https://bl.ocks.org/mbostock/4060606]()
 - [https://github.com/maptime-ams/animated-borders-d3js]()
 - [https://nicolashery.com/integrating-d3js-visualizations-in-a-react-app/]()
+
+# Possible future work
+- wire defaults from reducer into index, or vice-versa -- remove repetition
+- refactor tooltip code to make it easy to show/hide all tooltips (perhaps with svg title and a visibility flag?)
+- remove hardcoding in tooltip text placement
+- more generally, improve styling & layout -- css modules, inline styles?
+- find and use a react slider component similar to autocomplete in place of chroniton
+- use common max for given violation across all years (would need to remove incomplete 2015 data)
+- mobile equivalent of onhover -- ontap?
+- add more precinct-based datasets!
