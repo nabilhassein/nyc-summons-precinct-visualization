@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import d3 from 'd3'
 import Legend from './Legend.js'
 import PrecinctMap from './PrecinctMap.js'
 import Slider from './Slider.js'
@@ -20,28 +21,37 @@ class UI extends React.Component {
 
     getViolationData(currentViolation, currentYear) {
         return this.props.violationData.reduce(
-            ([precinctObj, oldMax], row) => {
+            (precinctObj, row) => {
                 if (row.Violation === currentViolation) {
-                    const numViolations = row[currentYear],
-                          newMax = Math.max(numViolations, oldMax);
-
-                    return [{...precinctObj, [row.Precinct]: numViolations}, newMax];
+                    return {...precinctObj, [row.Precinct]: row[currentYear]}
                 }
 
-                return [precinctObj, oldMax];
+                return precinctObj
             },
-            [{}, 0]
+            {}
         );
     }
 
+    getViolationMax(currentViolation) {
+        for (const row of this.props.violationData) {
+            if (row.Violation === currentViolation) {
+                return row.Max;
+            }
+        }
+    }
+
     render() {
-        const [violationSubset, violationMax] =
-            this.getViolationData(this.props.currentViolation, this.props.currentYear);
+        const violationSubset = this.getViolationData(this.props.currentViolation, this.props.currentYear);
+        const violationMax = this.getViolationMax(this.props.currentViolation);
+
+        const quantize = d3.scale.quantize()
+              .domain([0, violationMax])
+              .range(d3.range(9).map(i => "q" + i));
 
         return (<div id={this.id}>
                 <ViolationInput violations={this.props.allViolations} />
-                <Legend violationMax={violationMax} />
-                <PrecinctMap violationData={violationSubset} violationMax={violationMax} precinctJson={this.props.precinctJson} />
+                <Legend quantize={quantize} />
+                <PrecinctMap violationData={violationSubset} quantize={quantize} precinctJson={this.props.precinctJson} />
                 <Slider firstYear={this.props.firstYear} lastYear={this.props.lastYear} currentYear={this.props.currentYear} />
                 </div>);
     }

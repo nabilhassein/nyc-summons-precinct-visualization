@@ -29,10 +29,6 @@ export default class Legend extends React.Component {
     componentWillReceiveProps(newProps) {
         const legendClass = this.legendClass;
 
-        const quantize = d3.scale.quantize()
-              .domain([0, newProps.violationMax])
-              .range(d3.range(9).map(i => "q" + i));
-
         this.svg.append("g")
             .attr("class", legendClass)
             .attr("transform", "translate(20,20)");
@@ -40,7 +36,7 @@ export default class Legend extends React.Component {
         const colorLegend = d3_legend.legend.color()
               .labelFormat(d3.format("f"))
               .useClass(true)
-              .scale(quantize);
+              .scale(newProps.quantize);
 
         this.svg.select("." + legendClass)
             .call(colorLegend);

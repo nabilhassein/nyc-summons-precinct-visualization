@@ -81,15 +81,11 @@ class PrecinctMap extends React.Component {
     componentWillReceiveProps(newProps) {
         const precinctClass = this.precinctClass;
 
-        const quantize = d3.scale.quantize()
-              .domain([0, newProps.violationMax])
-              .range(d3.range(9).map(i => "q" + i));
-
         this.svg
             .selectAll("." + precinctClass)
             .attr("class", d => {
                 const numViolations = newProps.violationData[d.properties.Precinct.toString()];
-                return quantize(numViolations) + " " + precinctClass;
+                return newProps.quantize(numViolations) + " " + precinctClass;
             });
 
         this.drawTooltip(newProps.currentPrecinct, newProps.violationData, newProps.mouseX, newProps.mouseY);
