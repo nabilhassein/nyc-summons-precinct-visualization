@@ -42,23 +42,20 @@ export default class PrecinctMap extends React.Component {
     }
 
     componentWillReceiveProps(newProps) {
-        const precinctClass = this.precinctClass;
-
-        const precinctTitle = d => `Precinct: ${d.Precinct}\nViolations: ${newProps.violationData[d.Precinct]}`;
+        const precinctClass = this.precinctClass,
+              numViolations = precinct => newProps.violationData[precinct] || 0,
+              precinctTitle = precinct => `Precinct: ${precinct}\nViolations: ${numViolations(precinct)}`;
 
         this.svg
             .selectAll("." + precinctClass)
-            .attr("class", d => {
-                const numViolations = newProps.violationData[d.properties.Precinct.toString()];
-                return newProps.quantize(numViolations) + " " + precinctClass;
-            });
-        
+            .attr("class", d => newProps.quantize(numViolations(d.properties.Precinct)) + " " + precinctClass);
+
         this.svg
             .selectAll("." + precinctClass)
             .select("title").remove();
 
         this.svg
             .selectAll("." + precinctClass)
-            .append("svg:title").text(d => precinctTitle(d.properties));
+            .append("svg:title").text(d => precinctTitle(d.properties.Precinct));
     }
 }
