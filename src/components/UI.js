@@ -51,8 +51,16 @@ class UI extends React.Component {
         return (<div id={this.id}>
                 <ViolationInput violations={this.props.allViolations} />
                 <Legend quantize={quantize} />
-                <PrecinctMap violationData={violationSubset} quantize={quantize} precinctJson={this.props.precinctJson} />
-                <Slider firstYear={this.props.firstYear} lastYear={this.props.lastYear} currentYear={this.props.currentYear} />
+                <PrecinctMap
+                    violationData={violationSubset}
+                    quantize={quantize}
+                    precinctJson={this.props.precinctJson}
+                />
+                <Slider
+                    firstYear={this.props.firstYear}
+                    lastYear={this.props.lastYear}
+                    currentYear={this.props.currentYear}
+                />
                 </div>);
     }
 };

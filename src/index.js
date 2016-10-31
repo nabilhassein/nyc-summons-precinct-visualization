@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 import UI from './components/UI.js'
-import reducer from './reducer.js'
+import { defaultState, reducer } from './reducer.js'
 
 d3_queue.queue()
     .defer(d3.json, "data/police_precincts.geojson")
@@ -19,13 +19,19 @@ d3_queue.queue()
               firstYear = years[0],
               lastYear = years[years.length - 1];
 
-        const defaultViolation = "DISORDERLY CONDUCT";
-
         const allViolations = [...new Set(violationData.map(d => d.Violation))].sort();
 
         ReactDOM.render(
             <Provider store={store}>
-                <UI precinctJson={precinctJson} violationData={violationData} firstYear={firstYear} lastYear={lastYear} currentYear={firstYear} currentViolation={defaultViolation} allViolations={allViolations} />
+                <UI
+                    precinctJson={precinctJson}
+                    violationData={violationData}
+                    firstYear={firstYear}
+                    lastYear={lastYear}
+                    currentYear={defaultState.currentYear}
+                    currentViolation={defaultState.currentViolation}
+                    allViolations={allViolations}
+                />
             </Provider>,
             document.getElementById("root")
         );

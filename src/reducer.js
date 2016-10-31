@@ -1,15 +1,13 @@
-const defaultState = {
+export const defaultState = {
     "currentYear": "2007",
     "currentViolation": "DISORDERLY CONDUCT",
 }
 
-export default function reducer(state = defaultState, action) {
-    switch(action.type) {
-    case 'UPDATE_YEAR':
-        return {...state, currentYear: action.currentYear};
-    case 'UPDATE_VIOLATION':
-        return {...state, currentViolation: action.currentViolation};
-    default:
-        return state;
-    }
+export function reducer(state = defaultState, action) {
+    const actionToState = {
+        'UPDATE_YEAR': {...state, currentYear: action.currentYear},
+        'UPDATE_VIOLATION': {...state, currentViolation: action.currentViolation},
+    };
+
+    return actionToState[action.type] || state;
 }
