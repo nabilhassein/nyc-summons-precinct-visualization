@@ -35,6 +35,11 @@ class UI extends React.Component {
               .range(d3.range(9).map(i => "q" + i));
 
         return (<div id={this.id}>
+                <div id="About">
+                  <a href="https://github.com/nabilhassein/nyc-summons-precinct-visualization">source code</a>
+                  <span>  |  </span>
+                  <a href="https://nabilhassein.github.io/blog/visualizing-nyc-summonses">about this project</a>
+                </div>
                 <ViolationInput violations={this.allViolations} />
                 <Slider
                     firstYear={this.props.firstYear}
