@@ -16,7 +16,7 @@ class ViolationInput extends React.Component {
     }
 
     render() {
-        return (<div id={this.id}>
+        return (<div id={this.id} className="inline margin-right">
                 <Autocomplete
                   items={this.props.violations}
                   getItemValue={item => item}

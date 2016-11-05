@@ -16,14 +16,18 @@ class Slider extends React.Component {
     }
 
     render() {
-        return (<input
-                    id={this.id}
+        return (<div id={this.id} className="inline">
+            <output type={"text"} className="margin-right">Selected year: {this.props.currentYear}</output>
+            <output type={"text"}> {this.props.firstYear} </output>
+            <input
                     type={"range"}
                     min={this.props.firstYear}
                     max={this.props.lastYear}
                     value={this.props.currentYear}
                     onChange={event => this.props.onSlide(event.target.value)}
-                />);
+            />
+            <output type={"text"}> {this.props.lastYear} </output>
+        </div>);
     }
 };
 

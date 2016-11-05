@@ -12,3 +12,11 @@
   stroke: grey;
   stroke-width: 2px;
 }
+
+.inline {
+    display: inline-block;
+}
+
+.margin-right {
+    margin-right: 5vw;
+}

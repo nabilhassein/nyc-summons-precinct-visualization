@@ -11,8 +11,8 @@ export default class Legend extends React.Component {
     }
 
     render() {
-        return (<div id={this.id}>
-                    <svg width={window.innerWidth * .5} height={window.innerHeight * .2}>
+        return (<div id={this.id} >
+                    <svg>
                         <g className={this.legendClass} />
                     </svg>
                 </div>);

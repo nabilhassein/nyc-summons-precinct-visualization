@@ -9,7 +9,7 @@ export default class PrecinctMap extends React.Component {
     }
 
     render() {
-        return <div id={this.id} />;
+        return <div id={this.id} style={{"overflow": "visible"}} />;
     }
 
     componentDidMount() {
@@ -20,8 +20,7 @@ export default class PrecinctMap extends React.Component {
               features = this.props.precinctJson.features;
 
         this.svg = d3.select("#" + id).append("svg")
-            .attr("width", width)
-            .attr("height", height);
+            .attr("overflow", "visible");
 
         const projection = d3.geo.mercator()
             .center([-73.94, 40.70])

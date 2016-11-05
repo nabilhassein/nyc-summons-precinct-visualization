@@ -36,16 +36,16 @@ class UI extends React.Component {
 
         return (<div id={this.id}>
                 <ViolationInput violations={this.allViolations} />
+                <Slider
+                    firstYear={this.props.firstYear}
+                    lastYear={this.props.lastYear}
+                    currentYear={this.props.currentYear}
+                />
                 <Legend quantize={quantize} />
                 <PrecinctMap
                     violationData={precinctToCurrentYearViolations}
                     quantize={quantize}
                     precinctJson={this.props.precinctJson}
-                />
-                <Slider
-                    firstYear={this.props.firstYear}
-                    lastYear={this.props.lastYear}
-                    currentYear={this.props.currentYear}
                 />
                 </div>);
     }
