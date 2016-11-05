@@ -11,34 +11,24 @@ export default class Legend extends React.Component {
     }
 
     render() {
-        return <div id={this.id} />;
+        return (<div id={this.id}>
+                    <svg width={window.innerWidth * .5} height={window.innerHeight * .2}>
+                        <g className={this.legendClass} />
+                    </svg>
+                </div>);
     }
 
     componentDidMount() {
-        const width = window.innerWidth * .5,
-              height = window.innerHeight * .2,
-              id = this.id;
-
-        this.svg = d3.select("#" + id).append("svg")
-            .attr("width", width)
-            .attr("height", height);
-
         this.componentWillReceiveProps(this.props);
     }
 
     componentWillReceiveProps(newProps) {
-        const legendClass = this.legendClass;
-
-        this.svg.append("g")
-            .attr("class", legendClass)
-            .attr("transform", "translate(20,20)");
-
         const colorLegend = d3_legend.legend.color()
               .labelFormat(d3.format("f"))
               .useClass(true)
               .scale(newProps.quantize);
 
-        this.svg.select("." + legendClass)
+        d3.select("#" + this.id).select("." + this.legendClass)
             .call(colorLegend);
     }
 }
