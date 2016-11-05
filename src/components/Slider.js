@@ -1,16 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import d3 from 'd3'
-import chroniton from 'chroniton'
 
 const mapDispatchToProps = dispatch => {
     return {
-        onSlide: newYear => {
-            dispatch({
-                type: "UPDATE_YEAR",
-                currentYear: newYear,
-            })
-        }
+        onSlide: newYear => dispatch({
+            type: "UPDATE_YEAR",
+            currentYear: newYear,
+        })
     }
 }
 
@@ -21,23 +18,14 @@ class Slider extends React.Component {
     }
 
     render() {
-        return <div id={this.id} />;
-    }
-
-    componentDidMount() {
-        const id = this.id,
-              onSlide = this.props.onSlide,
-              firstYear = this.props.firstYear,
-              lastYear = this.props.lastYear;
-
-        this.slider = d3.select("#" + id).call(
-            chroniton()
-                .domain([new Date(firstYear, 1, 1), new Date(lastYear, 1, 1)])
-                .labelFormat(date => date.getFullYear())
-                .width(window.innerWidth / 2)
-                .on("change", date => onSlide(date.getFullYear().toString()))
-                .loop(true)
-        );
+        return (<input
+                    id={this.id}
+                    type={"range"}
+                    min={this.props.firstYear}
+                    max={this.props.lastYear}
+                    value={this.props.currentYear}
+                    onChange={event => this.props.onSlide(event.target.value)}
+                />);
     }
 };
 
