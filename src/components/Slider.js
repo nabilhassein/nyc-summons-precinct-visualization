@@ -2,14 +2,12 @@ import React from 'react'
 import { connect } from 'react-redux'
 import d3 from 'd3'
 
-const mapDispatchToProps = dispatch => {
-    return {
-        onSlide: newYear => dispatch({
-            type: "UPDATE_YEAR",
-            currentYear: newYear,
-        })
-    }
-}
+const mapDispatchToProps = dispatch => ({
+    onSlide: newYear => dispatch({
+        type: "UPDATE_YEAR",
+        currentYear: newYear,
+    })
+})
 
 class Slider extends React.Component {
     constructor(props) {

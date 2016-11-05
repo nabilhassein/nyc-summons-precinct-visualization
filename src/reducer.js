@@ -3,7 +3,7 @@ export const defaultState = {
     "currentViolation": "DISORDERLY CONDUCT",
 }
 
-export function reducer(state = defaultState, action) {
+export const reducer = (state = defaultState, action) => {
     const actionToState = {
         'UPDATE_YEAR': {...state, currentYear: action.currentYear},
         'UPDATE_VIOLATION': {...state, currentViolation: action.currentViolation},

@@ -6,53 +6,39 @@ import PrecinctMap from './PrecinctMap.js'
 import Slider from './Slider.js'
 import ViolationInput from './ViolationInput.js'
 
-const mapStateToProps = state => {
-    return {
-        currentYear: state.currentYear,
-        currentViolation: state.currentViolation,
-    }
-}
+const mapStateToProps = state => ({
+    currentYear: state.currentYear,
+    currentViolation: state.currentViolation,
+})
 
 class UI extends React.Component {
     constructor(props) {
         super(props);
         this.id = "UI";
-    }
-
-    getViolationData(currentViolation, currentYear) {
-        return this.props.violationData.reduce(
-            (precinctObj, row) => {
-                if (row.Violation === currentViolation) {
-                    return {...precinctObj, [row.Precinct]: row[currentYear]}
-                }
-
-                return precinctObj
-            },
-            {}
-        );
-    }
-
-    getViolationMax(currentViolation) {
-        for (const row of this.props.violationData) {
-            if (row.Violation === currentViolation) {
-                return row.Max;
-            }
-        }
+        this.allViolations = [...new Set(props.violationData.map(row => row.Violation))].sort();
     }
 
     render() {
-        const violationSubset = this.getViolationData(this.props.currentViolation, this.props.currentYear);
-        const violationMax = this.getViolationMax(this.props.currentViolation);
+        const { currentViolation, currentYear, violationData } = this.props;
+
+        const violationMax = violationData.find(row => row.Violation === currentViolation).Max;
+
+        const precinctToCurrentYearViolations = violationData.reduce( (precinctObj, row) =>
+            row.Violation === currentViolation ?
+            {...precinctObj, [row.Precinct]: row[currentYear]} :
+            precinctObj,
+            {}
+        )
 
         const quantize = d3.scale.quantize()
               .domain([0, violationMax])
               .range(d3.range(9).map(i => "q" + i));
 
         return (<div id={this.id}>
-                <ViolationInput violations={this.props.allViolations} />
+                <ViolationInput violations={this.allViolations} />
                 <Legend quantize={quantize} />
                 <PrecinctMap
-                    violationData={violationSubset}
+                    violationData={precinctToCurrentYearViolations}
                     quantize={quantize}
                     precinctJson={this.props.precinctJson}
                 />

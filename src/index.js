@@ -19,8 +19,6 @@ d3_queue.queue()
               firstYear = years[0],
               lastYear = years[years.length - 1];
 
-        const allViolations = [...new Set(violationData.map(d => d.Violation))].sort();
-
         ReactDOM.render(
             <Provider store={store}>
                 <UI
@@ -30,7 +28,6 @@ d3_queue.queue()
                     lastYear={lastYear}
                     currentYear={defaultState.currentYear}
                     currentViolation={defaultState.currentViolation}
-                    allViolations={allViolations}
                 />
             </Provider>,
             document.getElementById("root")
